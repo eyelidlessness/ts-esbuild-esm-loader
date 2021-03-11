@@ -49,12 +49,13 @@
     }
   },
   "scripts": {
-    "build": "yarn clean && esr ./scripts/build.ts",
-    "clean": "esr ./scripts/clean.ts",
+    "build": "yarn clean && yarn run-esr ./scripts/build.ts",
+    "clean": "yarn run-esr ./scripts/clean.ts",
     "lint": "eslint",
     "prepare": "yarn clean && yarn lint && yarn build && yarn test",
+    "run-esr": "esr ./scripts/cjs/run-esr.ts",
     "test": "yarn test:base --once",
-    "test:base": "esr ./scripts/test.ts",
+    "test:base": "yarn run-esr ./scripts/test",
     "test:watch": "yarn test:base"
   }
 }

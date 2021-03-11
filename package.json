@@ -1,0 +1,60 @@
+{
+  "name": "tsconfig-paths-esm-loader",
+  "version": "1.0.0",
+  "description": "Experimental Loader for Node.js ESM modules with import aliases specified in tsconfig paths",
+  "repository": "git@github.com:eyelidlessness/tsconfig-paths-esm-loader.git",
+  "author": "eyelidlessness <gnosis@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=10.0.0 <15"
+  },
+  "volta": {
+    "node": "14.15.4"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "**/*.d.ts"
+  ],
+  "main": "./dist/index.js",
+  "devDependencies": {
+    "@ava/babel": "^1.0.1",
+    "@babel/core": "^7.0.0",
+    "@types/node": "^14.14.33",
+    "@types/yargs": "^16.0.0",
+    "ava": "^3.15.0",
+    "del": "^6.0.0",
+    "dotenv": "^8.2.0",
+    "empower-core": "^1.2.0",
+    "esbuild": "^0.9.0",
+    "esbuild-plugin-babel": "^0.2.3",
+    "esbuild-runner": "^1.3.2",
+    "eslint": "^7.21.0",
+    "esm": "^3.2.25",
+    "estrella": "^1.3.3",
+    "globby": "^11.0.1",
+    "md5-hex": "^3.0.1",
+    "package-hash": "^4.0.0",
+    "strip-bom-buf": "^2.0.0",
+    "typescript": "^4.2.3",
+    "yargs": "^16.2.0"
+  },
+  "peerDependencies": {
+    "esbuild": "^0.9.0",
+    "typescript": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "esbuild": {
+      "optional": true
+    }
+  },
+  "scripts": {
+    "build": "yarn clean && esr ./scripts/build.ts",
+    "clean": "esr ./scripts/clean.ts",
+    "lint": "eslint",
+    "prepare": "yarn clean && yarn lint && yarn build && yarn test",
+    "test": "yarn test:base --once",
+    "test:base": "node ./scripts/test.js",
+    "test:watch": "yarn test:base"
+  }
+}

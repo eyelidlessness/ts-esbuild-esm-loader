@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "esnext"
+  },
+  "extends": "../tsconfig.json",
+  "include": [
+    ".",
+    "../typings"
+  ]
+}

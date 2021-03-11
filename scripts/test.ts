@@ -1,7 +1,5 @@
-// @ts-check
-
-import { set as setChalkContext } from 'ava/lib/chalk.js';
-import { controlFlow }            from 'ava/lib/ipc-flow-control.js';
+import { set as setChalkContext } from 'ava/lib/chalk';
+import { controlFlow }            from 'ava/lib/ipc-flow-control';
 import chalk                      from 'chalk';
 import del                        from 'del';
 import dotEnv                     from 'dotenv';
@@ -9,14 +7,16 @@ import estrella                   from 'estrella';
 import globby                     from 'globby';
 import path                       from 'path';
 
+import type Ava      from 'ava/lib/api';
+import type Reporter from 'ava/lib/reporters/default';
+
 dotEnv.config();
 
 const cwd         = process.cwd();
 const entriesGlob = '{src,test}/**/*.{cjs,js,jsx,mjs,ts,tsx}';
 const outDir      = path.resolve(cwd, './.test');
 
-/** @type {estrella.BuildProcess | null} */
-let testProcess = null;
+let testProcess: estrella.BuildProcess | null = null;
 
 // We cannot use the built-in `watch` flag, because the built-in
 // watch mode doesn't handle file-system updates, and the `build`
@@ -29,11 +29,8 @@ const [ args ] = estrella.cliopts.parse([
 const isWatch     = !args.once;
 const avaCacheDir = path.join(cwd, 'node_modules', '.cache', 'ava');
 
-/** @type {import('ava/lib/api') | null} */
-let ava = null;
-
-/** @type {import('ava/lib/reporters/default') | null} */
-let reporter = null;
+let ava:      Ava | null      = null;
+let reporter: Reporter | null = null;
 
 const chalkOptions = {
   level: chalk.level || 3,
@@ -68,8 +65,8 @@ const runTests = () => {
 
     async onEnd() {
       if (ava == null) {
-        const { default: Ava }      = await import('ava/lib/api.js');
-        const { default: Reporter } = await import('ava/lib/reporters/default.js');
+        const { default: Ava }      = await import('ava/lib/api');
+        const { default: Reporter } = await import('ava/lib/reporters/default');
 
         ava = new Ava({
           cacheEnabled:          true,
@@ -93,7 +90,12 @@ const runTests = () => {
           },
 
           match:           [],
-          moduleTypes:     { cjs: 'commonjs', mjs: 'module', js: 'module' },
+          moduleTypes: {
+            cjs: 'commonjs',
+            js:  'module',
+            jsx: 'module',
+            mjs: 'module',
+          },
           nodeArguments,
           parallelRuns:    null,
           projectDir:      cwd,
@@ -118,7 +120,7 @@ const runTests = () => {
         });
 
         ava.on('run', (plan) => {
-          reporter.startRun(plan);
+          reporter!.startRun(plan);
 
           const bufferedSend = controlFlow(process);
 
@@ -126,7 +128,7 @@ const runTests = () => {
             bufferedSend(event);
 
             if (event.type === 'interrupt') {
-              reporter.endRun();
+              reporter!.endRun();
               process.exit(1);
             }
           });
@@ -136,7 +138,7 @@ const runTests = () => {
       const runStatus = await ava.run();
       const exitCode = runStatus.suggestExitCode({ matching: false });
 
-      reporter.endRun();
+      reporter!.endRun();
 
       if (exitCode !== 0) {
         throw new TestFailure();
@@ -145,8 +147,7 @@ const runTests = () => {
   });
 };
 
-/** @type {estrella.CancellablePromise<void>} */
-let watchProcess = null;
+let watchProcess: estrella.CancellablePromise<void> | null = null;
 
 const main = async () => {
   if (testProcess != null) {
@@ -179,7 +180,7 @@ const main = async () => {
   }
   finally {
     if (isWatch) {
-      testProcess.cancel();
+      testProcess!.cancel();
       testProcess = null;
 
       if (watchProcess == null) {

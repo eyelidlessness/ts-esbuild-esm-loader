@@ -1,4 +1,5 @@
 {
-  "type":    "module",
-  "include": [ "." ]
+  "//": "This just ensures the `esr` command is able to run these scripts, otherwise they'll error due to the unexpected `.ts` extension",
+
+  "type": "commonjs"
 }

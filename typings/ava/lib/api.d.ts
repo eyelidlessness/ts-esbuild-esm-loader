@@ -48,14 +48,14 @@ declare module 'ava/lib/api' {
 
     readonly match: readonly unknown[];
 
-    readonly moduleTypes: {
+    readonly moduleTypes: Partial<{
       readonly cjs: 'commonjs';
       readonly js:  'module';
       readonly mjs: 'module';
       readonly jsx: 'module';
       readonly ts:  'module';
       readonly tsx: 'module';
-    };
+    }>;
 
     readonly nodeArguments?:   readonly string[];
     readonly parallelRuns?:    boolean | null;

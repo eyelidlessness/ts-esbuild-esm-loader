@@ -24,4 +24,11 @@ jobs:
     - run: yarn install
     - run: yarn workspaces run lint
     - run: yarn workspaces run typecheck
+
+    - if: ${{ matrix.node-version != '14' }}
+      run: yarn workspaces run test
+      env:
+        NODE_OPTIONS: '--experimental-modules'
+
     - run: yarn workspaces run test
+      if: ${{ matrix.node-version == '14' }}

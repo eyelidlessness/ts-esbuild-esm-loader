@@ -3,3 +3,4 @@
 /.test
 /yarn-error.log
 .DS_Store
+/packages/ts-esbuild-esm-loader/dist

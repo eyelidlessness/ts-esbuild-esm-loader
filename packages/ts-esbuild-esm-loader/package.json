@@ -50,7 +50,7 @@
     "lint": "eslint",
     "prepare": "yarn clean && yarn lint && yarn build && yarn test",
     "run:esr": "esr --cache",
-    "run:loader": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-loader=./dist/index.js\" $@",
+    "run:loader": "./scripts/with-loader-env $@",
     "test": "yarn run:loader ava",
     "test:uvu": "yarn run:loader uvu . '.*\\.uvuTest\\.(cjs|js|jsx|mjs|ts|tsx)$'",
     "test:uvu:watch": "yarn run watch yarn run test:uvu",

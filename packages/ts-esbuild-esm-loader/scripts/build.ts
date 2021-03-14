@@ -19,6 +19,7 @@ const ENTRY_DEFAULT    = path.resolve(CWD, './src/index.ts');
 const FORMAT_DEFAULT   = 'esm';
 const OUTFILE_DEFAULT  = path.resolve(CWD, './dist/index.js');
 const PLATFORM_DEFAULT = 'node';
+const TARGET_DEFAULT   = 'es2018';
 
 const esbuildFormats = new Set([
   'cjs',
@@ -81,7 +82,11 @@ const [
 
 const [
   platform = PLATFORM_DEFAULT,
-] = args(argv, 'format',  esbuildPlatform);
+] = args(argv, 'platform',  esbuildPlatform);
+
+const [
+  target = TARGET_DEFAULT,
+] = args(argv, 'target',  esbuildPlatform);
 
 const options = {
   bundle,
@@ -90,6 +95,7 @@ const options = {
   format,
   platform,
   outfile,
+  target,
 };
 
 esbuild.buildSync(options);

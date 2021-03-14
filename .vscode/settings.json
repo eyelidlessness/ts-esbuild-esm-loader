@@ -2,12 +2,15 @@
   "editor.tabSize": 2,
   "typescript.tsdk": "node_modules/typescript/lib",
   "files.exclude": {
-    "**/.git": true,
-    "**/.svn": true,
-    "**/.hg": true,
-    "**/CVS": true,
     "**/.DS_Store": true,
-    "node_modules": true
+    "**/.git": true,
+    "**/.hg": true,
+    "**/.svn": true,
+    "**/.yarn": true,
+    "node_modules": true,
+    "packages/*/dist": true,
+    "yarn-error.log": true,
+    "yarn.lock": true
   },
   "debug.javascript.autoAttachFilter": "always"
 }

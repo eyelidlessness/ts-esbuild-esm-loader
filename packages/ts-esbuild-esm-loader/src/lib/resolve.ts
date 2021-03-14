@@ -1,32 +1,9 @@
 import path from 'path';
-import ts   from 'typescript';
-
-const relativePrefix = /^[./]/;
-
-const tsconfigDefault = process.env.NODE_ENV === 'test'
-  ? 'tsconfig.test.json'
-  : 'tsconfig.json';
-
-const getTsconfigPath = (rootDir: string) => (
-  ts.findConfigFile(
-    rootDir,
-    ts.sys.fileExists,
-    tsconfigDefault
-  ) ??
-  path.resolve(rootDir, tsconfigDefault)
-);
-
-const cwd = process.cwd();
-const tsconfigPath = getTsconfigPath(cwd);
-
-const {
-  config: tsconfig = {},
-} = ts.readConfigFile(tsconfigPath, ts.sys.readFile);
-
-const {
-  baseUrl = '.',
-  paths   = {},
-} = tsconfig.compilerOptions ?? {};
+import {
+  baseUrl,
+  CWD,
+  paths,
+} from './config.js';
 
 const escapePattern = (str: string) => (
   str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -61,11 +38,12 @@ const pathsMap = new Map(Object.entries(paths).map(([ pattern, resolutions ]) =>
   resolutionsArray(resolutions).map(resolutionSpec),
 ])));
 
-const noSuffix = /\/[^.]*$/;
+const noExtensionPattern    = /\/[^.]*$/;
+const relativePrefixPattern = /^[./]/;
 
 interface ResolveContext {
-  conditions: string[];
-  parentURL?: string;
+  readonly conditions: readonly string[];
+  readonly parentURL?: string;
 }
 
 type ResolveFunction = (
@@ -81,13 +59,12 @@ export const resolve: ResolveFunction = async (
 ) => {
   for (const [ pattern, resolutions ] of pathsMap.entries()) {
     if (pattern.test(specifier)) {
-
       const mapped = specifier.replace(pattern, '$1');
+
       for (const [ prefix, suffix ] of resolutions) {
-        const modulePath = path.resolve(cwd, baseUrl, prefix, `${mapped}${suffix}`);
+        const modulePath = path.resolve(CWD, baseUrl, prefix, `${mapped}${suffix}`);
 
         try {
-          console.log('resolve', modulePath);
           const resolved = defaultResolve(modulePath, context, defaultResolve);
 
           return resolved;
@@ -99,12 +76,9 @@ export const resolve: ResolveFunction = async (
     }
   }
 
-  if (noSuffix.test(specifier) && relativePrefix.test(specifier)) {
-    console.log('resolve', `${specifier}.js`)
+  if (noExtensionPattern.test(specifier) && relativePrefixPattern.test(specifier)) {
     return defaultResolve(`${specifier}.js`, context, defaultResolve);
   }
-
-  console.log('resolve', specifier);
 
   return defaultResolve(specifier, context, defaultResolve);
 };

@@ -1,11 +1,12 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "module": "esnext"
+    "esModuleInterop": true,
+    "module": "CommonJS"
   },
   "extends": "../tsconfig.json",
   "include": [
     ".",
-    "../typings"
+    "../../../typings"
   ]
 }

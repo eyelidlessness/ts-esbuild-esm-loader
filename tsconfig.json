@@ -1,3 +1,38 @@
 {
-  "extends": "./tsconfig.base.json"
+  "compilerOptions": {
+    "allowJs":                          true,
+    "allowSyntheticDefaultImports":     true,
+    "allowUnreachableCode":             false,
+    "baseUrl":                          ".",
+    "declaration":                      true,
+    "downlevelIteration":               true,
+    "esModuleInterop":                  true,
+    "experimentalDecorators":           true,
+    "forceConsistentCasingInFileNames": true,
+    "inlineSourceMap":                  true,
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "es2018"
+    ],
+    "isolatedModules":            true,
+    "module":                     "esnext",
+    "moduleResolution":           "node",
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedLocals":             true,
+    "noUnusedParameters":         true,
+    "paths": {
+      "@/*": [ "./*" ]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck":      true,
+    "strict":            true,
+    "target":            "es2018"
+  },
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "./typings"
+  ]
 }

@@ -1,5 +1,7 @@
+
 declare module 'ava/lib/api' {
-  import { ChalkOptions } from './chalk';
+  import { AvaProvider }  from 'ava/lib/provider-manager';
+  import { ChalkOptions } from 'ava/lib/chalk';
 
   type AvaFileExtension =
     | 'cjs'
@@ -11,12 +13,9 @@ declare module 'ava/lib/api' {
 
   type AvaFileExtensions = readonly AvaFileExtension[];
 
-  declare const avaPlan: unique symbol;
-
-  export interface AvaPlan {
-    [typeof avaPlan]: unknown;
-
-    readonly status: NodeJS.EventEmitter;
+  export class AvaPlan {
+    private readonly _avaPlan: unknown;
+    readonly status:           NodeJS.EventEmitter;
   }
 
   type RunEventHandler = (plan: AvaPlan) => void;
@@ -29,7 +28,7 @@ declare module 'ava/lib/api' {
     suggestExitCode(options: SuggestExitCodeOptions): number;
   }
 
-  interface AvaAPIOptions {
+  export interface AvaAPIOptions {
     readonly cacheEnabled:          boolean;
     readonly chalkOptions:          ChalkOptions;
     readonly concurrency:           number;
@@ -60,7 +59,7 @@ declare module 'ava/lib/api' {
     readonly nodeArguments?:   readonly string[];
     readonly parallelRuns?:    boolean | null;
     readonly projectDir:       string;
-    readonly providers:        readonly unknown[];
+    readonly providers:        readonly AvaProvider[];
     readonly ranFromCli:       boolean;
     readonly require:          readonly string[];
     readonly serial?:          boolean;
@@ -70,10 +69,12 @@ declare module 'ava/lib/api' {
     readonly workerArgv?:      readonly string[];
   }
 
-  export default class Ava implements NodeJS.EventEmitter {
-    constructor(options: AvaAPIOptions) {}
+  export default interface Ava extends NodeJS.EventEmitter {}
 
-    on(event: 'run', handler: RunEventHandler): void;
+  export default class Ava implements NodeJS.EventEmitter {
+    constructor(options: AvaAPIOptions);
+
+    on(event: 'run', handler: RunEventHandler): this;
 
     run(): Promise<RunStatus>;
   }

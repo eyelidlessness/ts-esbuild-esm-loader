@@ -1,17 +1,20 @@
 #!/usr/bin/env bash
 
 NODE_VERSION=$(node --version)
-
+NODE_MAJOR_VERSION="${NODE_VERSION:0:4}"
 LOADER_OPTIONS=''
 
-if [ NODE_VERSION == v10.* ]
+if [ NODE_MAJOR_VERSION == "v10." ]
 then
   LOADER_OPTIONS="--experimental-modules --loader=./dist/index.js"
-elif [ NODE_VERSION == v12.* ]
+elif [ NODE_MAJOR_VERSION == "v12." ]
 then
   LOADER_OPTIONS="--experimental-modules --experimental-loader=./dist/index.js"
-else
+elif [ NODE_MAJOR_VERSION == "v14." ]
+then
   LOADER_OPTIONS="--experimental-loader=./dist/index.js"
+else
+  echo "Unexpected Node version: ${NODE_VERSION:0:3}"
 fi
 
 export NODE_OPTIONS="$NODE_OPTIONS $LOADER_OPTIONS"

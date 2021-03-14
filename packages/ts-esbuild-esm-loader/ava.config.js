@@ -9,6 +9,8 @@ const nodeArguments = typeof NODE_OPTIONS === 'string'
   : [];
 
 const config = {
+  color: true,
+
   environmentVariables: {
     NODE_OPTIONS,
   },
@@ -19,7 +21,7 @@ const config = {
   },
 
   files: [
-    '**/*.avaTest.{cjs,js,jsx,mjs,ts,tsx}',
+    '**/*.test.{cjs,js,jsx,mjs,ts,tsx}',
   ],
 
   nodeArguments,

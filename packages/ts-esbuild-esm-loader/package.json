@@ -50,9 +50,11 @@
     "lint": "eslint",
     "prepare": "yarn clean && yarn lint && yarn build && yarn test",
     "run:esr": "esr --cache",
-    "run:ts": "NODE_OPTIONS=\"$NODE_OPTIONS --no-warnings --experimental-loader=./dist/index.js\" $@",
-    "test": "yarn run:ts uvu && yarn run:ts ava",
-    "test:watch": "yarn run watch yarn run test",
+    "run:loader": "NODE_OPTIONS=\"$NODE_OPTIONS --experimental-loader=./dist/index.js\" $@",
+    "test": "yarn run:loader ava",
+    "test:uvu": "yarn run:loader uvu . '.*\\.uvuTest\\.(cjs|js|jsx|mjs|ts|tsx)$'",
+    "test:uvu:watch": "yarn run watch yarn run test:uvu",
+    "test:watch": "yarn run test --watch",
     "watch": "yarn run:esr ./scripts/watch.ts"
   }
 }

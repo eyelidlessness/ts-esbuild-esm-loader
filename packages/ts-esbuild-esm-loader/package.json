@@ -55,6 +55,7 @@
     "test:uvu": "yarn run:loader uvu . '.*\\.uvuTest\\.(cjs|js|jsx|mjs|ts|tsx)$'",
     "test:uvu:watch": "yarn run watch yarn run test:uvu",
     "test:watch": "yarn run test --watch",
+    "typecheck": "tsc --noEmit",
     "watch": "yarn run:esr ./scripts/watch.ts"
   }
 }

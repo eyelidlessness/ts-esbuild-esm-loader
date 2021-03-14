@@ -1,4 +1,6 @@
-import path from 'path';
+import fs                from 'fs';
+import path              from 'path';
+
 import {
   baseUrl,
   CWD,
@@ -41,16 +43,26 @@ const pathsMap = new Map(Object.entries(paths).map(([ pattern, resolutions ]) =>
 const noExtensionPattern    = /\/[^.]*$/;
 const relativePrefixPattern = /^[./]/;
 
-interface ResolveContext {
-  readonly conditions: readonly string[];
-  readonly parentURL?: string;
+/**
+ * In Node v10.x.x, this will be a `parentURL` string,
+ * in later versions it's a context object
+ */
+type ResolveContext =
+  | string | undefined
+  | {
+    readonly conditions: readonly string[];
+    readonly parentURL?: string;
+  };
+
+interface Resolved {
+  readonly url: string;
 }
 
 type ResolveFunction = (
   specifier:      string,
   context:        ResolveContext,
   defaultResolve: ResolveFunction
-) => Promise<{ url: string }>;
+) => Promise<Resolved>;
 
 export const resolve: ResolveFunction = async (
   specifier,
@@ -62,12 +74,15 @@ export const resolve: ResolveFunction = async (
       const mapped = specifier.replace(pattern, '$1');
 
       for (const [ prefix, suffix ] of resolutions) {
-        const modulePath = path.resolve(CWD, baseUrl, prefix, `${mapped}${suffix}`);
+        const modulePath = path.resolve(
+          CWD,
+          baseUrl,
+          prefix,
+          `${mapped}${suffix}`
+        );
 
         try {
-          const resolved = defaultResolve(modulePath, context, defaultResolve);
-
-          return resolved;
+          return defaultResolve(modulePath, context, defaultResolve);
         }
         catch (error) {
           console.error('error', error);
@@ -76,8 +91,16 @@ export const resolve: ResolveFunction = async (
     }
   }
 
-  if (noExtensionPattern.test(specifier) && relativePrefixPattern.test(specifier)) {
-    return defaultResolve(`${specifier}.js`, context, defaultResolve);
+  if (
+    noExtensionPattern.test(specifier) &&
+    relativePrefixPattern.test(specifier) &&
+    !fs.existsSync(specifier)
+  ) {
+    return defaultResolve(
+      `${specifier}.js`,
+      context,
+      defaultResolve
+    );
   }
 
   return defaultResolve(specifier, context, defaultResolve);

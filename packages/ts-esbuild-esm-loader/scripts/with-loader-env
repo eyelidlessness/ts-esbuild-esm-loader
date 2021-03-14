@@ -3,18 +3,17 @@
 NODE_VERSION=$(node --version)
 NODE_MAJOR_VERSION="${NODE_VERSION:0:4}"
 LOADER_OPTIONS=''
+LOADER='./dist/index.mjs'
 
-if [ NODE_MAJOR_VERSION == "v10." ]
+if [ $NODE_MAJOR_VERSION == "v12." ]
 then
-  LOADER_OPTIONS="--experimental-modules --loader=./dist/index.js"
-elif [ NODE_MAJOR_VERSION == "v12." ]
+  LOADER_OPTIONS="--experimental-modules --experimental-loader=$LOADER"
+elif [ $NODE_MAJOR_VERSION == "v14." ]
 then
-  LOADER_OPTIONS="--experimental-modules --experimental-loader=./dist/index.js"
-elif [ NODE_MAJOR_VERSION == "v14." ]
-then
-  LOADER_OPTIONS="--experimental-loader=./dist/index.js"
+  LOADER_OPTIONS="--experimental-loader=$LOADER"
 else
-  echo "Unexpected Node version: ${NODE_VERSION:0:3}"
+  echo "Unexpected Node version: $NODE_MAJOR_VERSION"
+  exit 1
 fi
 
 export NODE_OPTIONS="$NODE_OPTIONS $LOADER_OPTIONS"

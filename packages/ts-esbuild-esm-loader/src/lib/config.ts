@@ -23,14 +23,23 @@ const {
 } = ts.readConfigFile(tsconfigPath, ts.sys.readFile);
 
 const {
+  options: compilerOptions,
+} = ts.parseJsonConfigFileContent(
+  tsconfig,
+  ts.sys,
+  CWD
+);
+
+const {
   baseUrl = '.',
   paths   = {},
 } = tsconfig.compilerOptions ?? {};
 
 export {
   baseUrl,
+  compilerOptions,
   CWD,
   paths,
   tsconfig,
-  tsconfigPath as tsconfigPath,
+  tsconfigPath,
 };

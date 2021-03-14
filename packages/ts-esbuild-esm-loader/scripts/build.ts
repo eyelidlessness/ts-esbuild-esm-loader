@@ -17,7 +17,7 @@ const CWD = process.cwd();
 const BUNDLE_DEFAULT   = true;
 const ENTRY_DEFAULT    = path.resolve(CWD, './src/index.ts');
 const FORMAT_DEFAULT   = 'esm';
-const OUTFILE_DEFAULT  = path.resolve(CWD, './dist/index.js');
+const OUTFILE_DEFAULT  = path.resolve(CWD, './dist/index.mjs');
 const PLATFORM_DEFAULT = 'node';
 const TARGET_DEFAULT   = 'es2018';
 
